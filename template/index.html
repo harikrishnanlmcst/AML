@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="UTF-8">
+  <!--<title> Login and Registration Form </title>-->
+  
+  <link href="{{url_for('static',filename='css/style.css')}}"rel="stylesheet"/>
+  <!-- Fontawesome CDN Link -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* Styles for the preloader */
+    .preloader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgb(247, 247, 247); /* Semi-transparent white background */
+      z-index: 9999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      pointer-events: none; /* Ensure that the preloader doesn't block interactions with the page */
+    }
+  
+    .preloader img {
+      width: 50px; /* Adjust the size of the preloader image */
+    }
+  
+    .container {
+      visibility: hidden; /* Hide the container while the preloader is displayed */
+    }
+
+    /* Style for input boxes */
+    .input-box {
+      margin-bottom: 10px;
+      position: relative;
+    }
+
+    .input-box input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+
+    /* Style for symbol icons */
+    .input-box i {
+      margin-right: 5px;
+    }
+
+    /* Style for custom dropdown */
+    .custom-dropdown select {
+      padding: 5px;
+      width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background-color: #fff;
+      font-size: 14px;
+    }
+
+    /* Style for boxes */
+    .box {
+      border: 1px solid #8b1317; /* Clay brown border color */
+      border-radius: 0; /* No border radius */
+      padding: 10px;
+      margin-bottom: 20px;
+    }
+
+    .box-title {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    /* Style for two fields in the same line */
+    .input-boxes-inline {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .input-boxes-inline input {
+      width: calc(50% - 5px);
+    }
+
+    /* Style for buttons */
+    .button input[type="button"], .button input[type="submit"] {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      background-color: #930808;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    /* Style for error messages */
+    .error-message {
+      font-size: 14px;
+      color: #a80606; /* Brown color */
+      margin-bottom: 10px;
+      display: none; /* Initially hide error messages */
+    }
+
+  </style>
+  
+  
+</head>
+
+<body>
+  <!-- Preloader -->
+  <div class="preloader">
+    <img src="{{url_for('static',filename='Images/flathourglass.gif')}}">
+  </div>
+
+  <!-- Rest of your HTML content -->
+  <div class="container">
+    <input type="checkbox" id="flip">
+    <div class="cover">
+      <div class="front">
+        <img src="{{url_for('static',filename='Images/bg.gif')}}"alt="">
+        <div class="text">
+          <span class="text-1"> <br></span>
+          <span class="text-2"></span>
+        </div>
+      </div>
+      <div class="back">
+        <img class="backImg" src="{{url_for('static',filename='Images/bg.gif')}}" alt="">
+        <div class="text">
+          <span class="text-1"> AI Driven AML Screening System <br> </span>
+          <span class="text-2"></span>
+        </div>
+      </div>
+    </div>
+    <div class="forms">
+      <div class="form-content">
+        <div class="login-form">
+          <img class="logo" src="{{url_for('static',filename='Images/logo.gif')}}" alt="Logo">
+          <div class="title">Login</div>
+          <form action="#">
+            <div class="input-boxes">
+              <div class="input-box">
+                <i class="fas fa-envelope"></i>
+                <input type="text" id="login-email" placeholder="Enter your email" required>
+                <span id="login-email-error" class="error-message"></span>
+              </div>
+              <div class="input-box">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="login-password" placeholder="Enter your password" required>
+              </div>
+              <div class="text"><a href="#">Forgot password?</a></div>
+              <div class="button input-box">
+                <input type="submit" value="Login">
+              </div>
+              <div class="text sign-up-text" style="margin-top: 25px;">Don't have an account? <label for="flip">Signup now</label></div>
+
+            </div>
+          </form>
+        </div>
+        <div class="signup-form">
+          <img class="logo" src="{{url_for('static',filename='Images/logo.gif')}}" alt="Logo">
+          <div class="title">Signup</div>
+          <form action="/register" onsubmit="return validateBankForm()" method = "post">
+            <div class="input-boxes bank-signup"> <!-- Added class bank-signup -->
+              <div class="input-box">
+                <div class="custom-dropdown">
+
+                  <select id="user-type" name="user-type"> <!-- Add the name attribute here -->
+                    <option value="" disabled selected>Select User Type</option>
+                    <option value="bank">Bank</option>
+                    <option value="customer">Customer</option>
+                  </select>
+                
+                </div>
+              </div>
+              <!-- Email error message -->
+              <div id="email-error-message" class="error-message" style="display:none;">
+                Invalid email format.
+              </div>
+              <!-- Password error message -->
+              <div id="password-error-message" class="error-message" style="display:none;">
+                Password must contain at least one lowercase letter, one uppercase letter, one digit, one special character, and be at least 8 characters long.
+              </div>
+              <!-- Phone number error message -->
+              <div id="phone-error-message" class="error-message" style="display:none;">
+                Phone number must be exactly 10 digits.
+              </div>
+              <!-- Inside the HTML code for the signup form -->
+              <div class="box" id="bank-fields" style="display:none;">
+                <div class="box-title">Bank Details</div>
+                <div class="input-boxes">
+                  <div class="input-boxes-inline">
+                    <input type="text" id="bank-id" name="bank-id" placeholder="BANKID" required>
+                    <input type="text" id="bank-name" name="bank-name" placeholder="NAME" required>
+                  </div>
+                  <div class="input-boxes-inline">
+                    <input type="text" id="bank-branch" name="bank-branch" placeholder="BRANCH" required>
+                    <input type="text" id="bank-address" name="bank-address" placeholder="ADDRESS" required>
+                  </div>
+                  <div class="input-boxes-inline">
+                    <input type="text" id="bank-contact-number" name="bank-contact-number" placeholder="CONTACTNUMBER" required>
+                    <span id="contact-error-message" class="error-message"></span>
+                    <input type="email" id="bank-email" name="bank-email" placeholder="EMAILID" required>
+                    <span id="email-error-message" class="error-message"></span>
+                  </div>
+                  <div class="input-boxes-inline">
+                    <input type="text" id="bank-username" name="bank-username" placeholder="USERNAME" required>
+                    <input type="password" id="bank-password" name="bank-password" placeholder="PASSWORD" required>
+                  </div>
+                </div>
+              </div>
+              <!-- Customer user type fields -->
+             <!-- Inside the HTML code for the signup form -->
+<!-- Inside the HTML code for the signup form -->
+  
+            
+              <div class="error-messages">
+                <span id="customer-contact-error-message" class="error-message" style="display:none;">Phone number must be exactly 10 digits.</span>
+                <span id="customer-email-error-message" class="error-message" style="display:none;">Invalid email format.</span>
+                <span id="customer-password-error-message" class="error-message" style="display:none;">Password must contain at least one lowercase letter, one uppercase letter, one digit, one special character, and be at least 8 characters long.</span>
+            </div>
+<!-- Customer user type fields -->
+<div id="customer-fields" style="display:none;">
+  <!-- Add your customer-specific fields here -->
+  <div class="box">
+      <div class="box-title">Personal Details</div>
+      
+      <div class="input-boxes">
+          <input type="text" id="customer-id" placeholder="CUSTOMERID" required>
+          <input type="text" id="customer-name" placeholder="CUSTOMERNAME" required>
+          <input type="date" id="customer-dob" placeholder="DOB" required>
+          <input type="text" id="customer-address" placeholder="ADDRESS" required>
+          <input type="text" id="customer-contact-number" placeholder="CONTACTNUMBER" required>
+          <input type="text" id="customer-nationality" placeholder="NATIONALITY" required>
+          <input type="text" id="customer-account-details" placeholder="ACCOUNTDETAILS" required>
+          <input type="email" id="customer-email" placeholder="EMAILID" required>
+          <input type="text" id="customer-username" placeholder="USERNAME" required>
+          <input type="password" id="customer-password" placeholder="PASSWORD" required>
+      </div>
+  </div>
+  <div class="box">
+      <div class="box-title">Account Details</div>
+      
+      <div class="input-boxes">
+          <input type="text" id="customer-caid" placeholder="CAID" required>
+          <input type="text" id="customer-bankname" placeholder="BANKNAME" required>
+          <input type="text" id="customer-accounttype" placeholder="ACCOUNTTYPE" required>
+          <input type="text" id="customer-accountname" placeholder="ACCOUNTNAME" required>
+          <input type="text" id="customer-currentbalance" placeholder="CURRENTBALANCE" required>
+      </div>
+  </div>
+</div>
+
+              
+              <!-- Registration button for bank -->
+              <div class="button input-box" id="bank-register-button" style="display:none;">
+                <input type="submit" value="Register">
+              </div>
+              <!-- Registration button for customer -->
+<div class="button input-box" id="customer-register-button" style="display:none;">
+  <input type="submit" value="Register">
+</div>
+              
+              <div class="text sign-up-text" style="margin-top: 25px;">Already have an account? <label for="flip">Login now</label></div>
+
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var userTypeSelect = document.getElementById('user-type');
+    
+        userTypeSelect.addEventListener('change', function () {
+            var userType = this.value;
+            toggleUserTypeSpecificFields(userType);
+        });
+    
+        function toggleUserTypeSpecificFields(userType) {
+            var bankFields = document.getElementById('bank-fields');
+            var bankRegisterButton = document.getElementById('bank-register-button');
+            var customerFields = document.getElementById('customer-fields');
+            var customerRegisterButton = document.getElementById('customer-register-button');
+    
+            if (userType === 'bank') {
+                bankFields.style.display = 'block';
+                bankRegisterButton.style.display = 'block';
+                customerFields.style.display = 'none';
+                customerRegisterButton.style.display = 'none';
+                toggleRequiredAttributes(bankFields, true);
+                toggleRequiredAttributes(customerFields, false);
+            } else if (userType === 'customer') {
+                bankFields.style.display = 'none';
+                bankRegisterButton.style.display = 'none';
+                customerFields.style.display = 'block';
+                customerRegisterButton.style.display = 'block';
+                toggleRequiredAttributes(bankFields, false);
+                toggleRequiredAttributes(customerFields, true);
+            }
+        }
+    
+        function toggleRequiredAttributes(fieldsContainer, isRequired) {
+            var inputs = fieldsContainer.querySelectorAll('input');
+            inputs.forEach(function(input) {
+                input.required = isRequired;
+            });
+        }
+    
+        initValidationListeners();
+    });
+    
+    function initValidationListeners() {
+        document.getElementById('bank-email').addEventListener('input', function () {
+            validateEmail(this, 'email-error-message');
+        });
+    
+        document.getElementById('bank-password').addEventListener('input', function () {
+            validatePassword(this, 'password-error-message');
+        });
+    
+        document.getElementById('bank-contact-number').addEventListener('input', function () {
+            validatePhoneNumber(this, 'phone-error-message');
+        });
+    
+        document.getElementById('customer-contact-number').addEventListener('input', function () {
+            validatePhoneNumber(this, 'customer-contact-error-message');
+        });
+    
+        document.getElementById('customer-email').addEventListener('input', function () {
+            validateEmail(this, 'customer-email-error-message');
+        });
+    
+        document.getElementById('customer-password').addEventListener('input', function () {
+            validatePassword(this, 'customer-password-error-message');
+        });
+    }
+    
+    function validateEmail(inputElement, errorMessageId) {
+        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        var isValid = emailRegex.test(inputElement.value);
+        document.getElementById(errorMessageId).style.display = isValid ? 'none' : 'block';
+    }
+    
+    function validatePassword(inputElement, errorMessageId) {
+        var passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+}{":;'?/>.<,])(?=.*[^\w\d\s]).{8,}$/;
+        var isValid = passwordRegex.test(inputElement.value);
+        document.getElementById(errorMessageId).style.display = isValid ? 'none' : 'block';
+    }
+    
+    function validatePhoneNumber(inputElement, errorMessageId) {
+        var isValid = inputElement.value.length === 10;
+        document.getElementById(errorMessageId).style.display = isValid ? 'none' : 'block';
+    }
+    </script>
+    
+
+  <script>
+    window.addEventListener('load', function () {
+        const preloader = document.querySelector('.preloader');
+        const container = document.querySelector('.container');
+        setTimeout(function() {
+            preloader.style.display = 'none';
+            container.style.visibility = 'visible';
+        }, 6000);
+    });
+  </script>
+
+</body>
+
+</html>
